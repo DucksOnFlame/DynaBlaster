@@ -4,7 +4,7 @@ import java.awt.EventQueue;
 
 /**
  * Main game class. Only starts a frame in a separate thread and sets it visible.
- * @version 0.5
+ * @version 1.0
  * @author DucksOnFlame
  */
 public class DynaBlasterGame {

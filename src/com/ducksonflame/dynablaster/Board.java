@@ -39,10 +39,10 @@ public class Board extends JPanel implements KeyListener {
 	public static final int NUMBER_OF_FREE_COLUMNS = 8;
 	public static final int NUMBER_OF_FREE_ROWS = 6;
 	public static final int GAP_WIDTH = TILE_SIZE;
-	public static final int INITIAL_MAX_BOMBS = 1;
+	public static final int INITIAL_MAX_BOMBS = 4;
 	public static final int INITIAL_RANGE = 2;
 	public static final int INITIAL_CHAR_TIMER_SPEED = 8;
-	public static final double SPAWN_RATE = 0.9;
+	public static final double SPAWN_RATE = 0;
 	public static final double POWER_UP_RATE = 0.2;
 	
 	//Characters
@@ -146,7 +146,7 @@ public class Board extends JPanel implements KeyListener {
 		 * There is currently a bug where if 3+ explosions chain together, one may remain on the map.
 		 * Looking for a proper fix.
 		 */
-		public void endExplosion () {			
+		public synchronized void endExplosion () {			
 			timer.stop();
 			try {
 				iterator = explosions.iterator();
@@ -155,20 +155,13 @@ public class Board extends JPanel implements KeyListener {
 					iterator.remove();	
 				}
 			}
-			catch (IllegalStateException iSE) {
-				iSE.printStackTrace();
+			catch (RuntimeException e) {
+				e.printStackTrace();
 				endExplosion();
 			}
-			catch (NullPointerException nPE) {
-				nPE.printStackTrace();
-				endExplosion();		
+			finally {
+				timer.start();				
 			}
-			catch (ConcurrentModificationException cME) {
-				cME.printStackTrace();
-				endExplosion();
-			}
-			timer.start();
-
 		}
 		
 		/**
